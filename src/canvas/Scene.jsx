@@ -7,23 +7,11 @@ import SubmergedCanyonWalls from './realms/SubmergedCanyonWalls';
 import SubmarineBase from './realms/SubmarineBase';
 import RealmFinal_Temple from './realms/RealmFinal_Temple';
 import ProceduralMonolith from './realms/ProceduralMonolith';
-import CinematicArtRealm from './realms/CinematicArtRealm';
 import { OverheadSunGap, SwirlingFishVortex, OverheadHumpbackWhale, DiverSilhouette } from './realms/OceanAtmospherics';
 import { EVENTS_DATA } from '../data/eventsData';
 
 export default function Scene({ scrollProgress, onUpdateDepth, onOpenRegister }) {
-  const realmTextures = [
-    '/assets/realm_portal.jpg',  // Realm 01: 3D Floating Stone Portal Ring
-    '/assets/realm_obelisk.jpg', // Realm 02: Obelisk & Priestesses
-    '/assets/realm_sword.jpg',   // Realm 03: Submerged Colossal Greatsword
-    '/assets/realm_crystal.jpg', // Realm 04: Submerged Crystal Cavern
-    '/assets/realm_temple.jpg',  // Realm 05: Abyssal City Temple
-    '/assets/realm_portal.jpg',  // Realm 06: 3D Floating Stone Portal Ring
-    '/assets/realm_crystal.jpg', // Realm 07: Crystal Chamber
-    '/assets/realm_sword.jpg',   // Realm 08: Submerged Greatsword & Library
-    '/assets/realm_portal.jpg',  // Realm 09: Floating Celestial Portal
-    '/assets/realm_temple.jpg'   // Realm 10: Abyssal Core Final Sanctuary
-  ];
+  const monolithTypes = ['gate', 'obelisk', 'gate', 'crystal', 'runestone', 'gate', 'obelisk', 'crystal', 'gate', 'runestone'];
 
   return (
     <div className="canvas-container">
@@ -62,33 +50,29 @@ export default function Scene({ scrollProgress, onUpdateDepth, onOpenRegister })
           {/* Smooth Scroll Vertical Descent Camera Trajectory with Interactive Mouse Parallax */}
           <CameraController scrollProgress={scrollProgress} onUpdateDepth={onUpdateDepth} />
 
-          {/* Hero Realm (0m): 3D Floating Stone Portal Ring */}
+          {/* Hero Realm (0m): 100% Volumetric 3D Stone Portal Ring Mesh */}
           <group position={[0, -5, -8]}>
-            <ProceduralMonolith type="gate" scale={[1.3, 1.3, 1.3]} runeText="ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ" />
+            <ProceduralMonolith type="gate" scale={[1.4, 1.4, 1.4]} runeText="ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ" />
           </group>
 
-          {/* Introduction Gate (84m): 3D Floating Stone Portal Ring Artwork */}
+          {/* Introduction Gate (84m): 100% Volumetric 3D Stone Portal Ring Mesh */}
           <group position={[0, -50, -10]}>
-            <CinematicArtRealm
-              position={[0, 0, 0]}
-              scale={[32, 52, 1]}
-              texturePath="/assets/realm_portal.jpg"
-            />
+            <ProceduralMonolith type="gate" scale={[1.3, 1.3, 1.3]} runeText="ᛗ ᛋ ᚾ ᛞ ᚱ" />
           </group>
 
-          {/* 10 Event Realms: 3D Floating Stone Portal Ring Artwork & Monoliths */}
+          {/* 10 Event Realms: 100% Pure Volumetric 3D Mesh Monoliths (Zero 2D Image Planes) */}
           {EVENTS_DATA.map((event, idx) => {
             const posY = -105 - (idx * 48);
             const posZ = -15 - (idx * 2);
-            const posX = (idx % 2 === 0 ? 4 : -4);
-            const texturePath = realmTextures[idx % realmTextures.length];
+            const posX = (idx % 2 === 0 ? 5 : -5);
+            const monolithType = monolithTypes[idx % monolithTypes.length];
 
             return (
               <group key={event.id} position={[posX, posY, posZ]}>
-                <CinematicArtRealm
-                  position={[0, 0, 0]}
-                  scale={[30, 50, 1]}
-                  texturePath={texturePath}
+                <ProceduralMonolith
+                  type={monolithType}
+                  scale={[1.3, 1.3, 1.3]}
+                  runeText={event.rune || "ᚱ ᛗ ᛋ ᚾ ᛞ"}
                 />
               </group>
             );
