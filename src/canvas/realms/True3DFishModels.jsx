@@ -79,8 +79,8 @@ export function True3DShark({ position = [0, 0, 0], scale = [2.2, 2.2, 2.2], spe
   );
 }
 
-// 2. PHOTOREALISTIC BOTTLENOSE DOLPHIN (High-Poly 64x64 Organic Geometry)
-export function True3DDolphin({ position = [0, 0, 0], scale = [2.2, 2.2, 2.2], speed = 0.35 }) {
+// 2. PHOTOREALISTIC BOTTLENOSE DOLPHIN (Compact Small Scale)
+export function True3DDolphin({ position = [0, 0, 0], scale = [0.4, 0.4, 0.4], speed = 0.35 }) {
   const groupRef = useRef();
   const tailRef = useRef();
 
@@ -148,7 +148,7 @@ export function True3DDolphin({ position = [0, 0, 0], scale = [2.2, 2.2, 2.2], s
         </mesh>
       </group>
 
-      <pointLight color="#00f0ff" intensity={4.5} distance={30} />
+      <pointLight color="#00f0ff" intensity={3.0} distance={20} />
     </group>
   );
 }

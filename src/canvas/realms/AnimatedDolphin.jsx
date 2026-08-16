@@ -5,7 +5,7 @@ import * as THREE from 'three';
 
 export default function AnimatedDolphin({
   scrollProgress = 0,
-  scale = [0.9, 0.9, 0.9]
+  scale = [0.35, 0.35, 0.35]
 }) {
   const group = useRef();
   const { scene, animations } = useGLTF('/assets/dolphin_anim.glb');
@@ -34,7 +34,7 @@ export default function AnimatedDolphin({
     });
   }, [actions, scene]);
 
-  // SLEEK PROPORTIONAL 3D DOLPHIN COMPANION SWIMMING ELEGANTLY
+  // ULTRA-COMPACT SLEEK 3D DOLPHIN COMPANION SWIMMING ELEGANTLY
   useFrame((state) => {
     const t = state.clock.elapsedTime;
     const p = THREE.MathUtils.clamp(scrollProgress, 0, 1);
@@ -61,7 +61,7 @@ export default function AnimatedDolphin({
     <group ref={group} scale={scale}>
       <primitive object={scene} />
       {/* Bioluminescent Cyan Point Light Following Dolphin */}
-      <pointLight color="#00f0ff" intensity={3.5} distance={20} />
+      <pointLight color="#00f0ff" intensity={2.5} distance={15} />
     </group>
   );
 }
