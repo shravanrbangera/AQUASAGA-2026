@@ -1,6 +1,7 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import GLBModelLoader from './GLBModelLoader';
 
 // 1. OVERHEAD SUNLIGHT CAVERN GAP & VOLUMETRIC GOD RAYS
 export function OverheadSunGap() {
@@ -45,58 +46,31 @@ export function OverheadSunGap() {
   );
 }
 
-// 2. MASSIVE SWIRLING FISH VORTEX TORNADO (800 Fishes Spanning 600m Depth)
-export function SwirlingFishVortex({ count = 800 }) {
+// 2. SWIRLING FISH VORTEX TORNADO (Loaded via GLB model asset)
+export function SwirlingFishVortex({ count = 180 }) {
   const vortexRef = useRef();
-  const dummy = useMemo(() => new THREE.Object3D(), []);
-
-  const vortexData = useMemo(() => {
-    return Array.from({ length: count }, (_, i) => {
-      const heightPercent = i / count;
-      return {
-        y: -heightPercent * 600, // Spans down 600m
-        radius: 7 + Math.sin(heightPercent * Math.PI * 6) * 9,
-        angleSpeed: 0.35 + Math.random() * 0.45,
-        phase: Math.random() * Math.PI * 2,
-        scale: 0.28 + Math.random() * 0.35
-      };
-    });
-  }, [count]);
 
   useFrame((state) => {
-    const t = state.clock.elapsedTime;
+    const t = state.clock.elapsedTime * 0.3;
     if (vortexRef.current) {
-      vortexData.forEach((fish, i) => {
-        const angle = t * fish.angleSpeed + fish.phase;
-        const x = Math.sin(angle) * fish.radius;
-        const z = Math.cos(angle) * fish.radius;
-        const y = fish.y + Math.sin(t * 1.2 + fish.phase) * 1.5;
-
-        dummy.position.set(x, y, z);
-        dummy.rotation.set(0, -angle + Math.PI / 2, Math.sin(t * 2 + fish.phase) * 0.2);
-        dummy.scale.setScalar(fish.scale);
-        dummy.updateMatrix();
-
-        vortexRef.current.setMatrixAt(i, dummy.matrix);
-      });
-      vortexRef.current.instanceMatrix.needsUpdate = true;
+      vortexRef.current.rotation.y = t;
     }
   });
 
   return (
-    <instancedMesh ref={vortexRef} args={[null, null, count]}>
-      <coneGeometry args={[0.35, 1.4, 6]} />
-      <meshStandardMaterial
-        color="#00d9d0"
-        emissive="#00f0ff"
-        emissiveIntensity={0.9}
-        roughness={0.2}
+    <group ref={vortexRef} position={[0, -150, -10]}>
+      <GLBModelLoader
+        modelPath="/models/fish/tropical-fish.glb"
+        position={[0, 0, 0]}
+        scale={[0.8, 0.8, 0.8]}
+        emissiveColor="#00f0ff"
+        emissiveIntensity={1.5}
       />
-    </instancedMesh>
+    </group>
   );
 }
 
-// 3. OVERHEAD COLOSSAL HUMPBACK WHALE
+// 3. OVERHEAD COLOSSAL HUMPBACK WHALE (Loaded via GLB model asset)
 export function OverheadHumpbackWhale() {
   const whaleGroupRef = useRef();
 
@@ -112,23 +86,13 @@ export function OverheadHumpbackWhale() {
 
   return (
     <group ref={whaleGroupRef}>
-      <mesh scale={[3.2, 2.2, 16.0]} rotation={[0.1, 0, 0]}>
-        <capsuleGeometry args={[2, 6, 16, 32]} />
-        <meshStandardMaterial color="#082938" emissive="#00f0ff" emissiveIntensity={1.2} roughness={0.4} />
-      </mesh>
-      <mesh position={[-4.5, -0.6, 2.0]} rotation={[0, 0, -0.6]}>
-        <boxGeometry args={[6.5, 0.4, 2.4]} />
-        <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={1.5} />
-      </mesh>
-      <mesh position={[4.5, -0.6, 2.0]} rotation={[0, 0, 0.6]}>
-        <boxGeometry args={[6.5, 0.4, 2.4]} />
-        <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={1.5} />
-      </mesh>
-      <mesh position={[0, 0.8, -15]} rotation={[0.4, 0, 0]}>
-        <boxGeometry args={[9.0, 0.4, 3.2]} />
-        <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={1.8} />
-      </mesh>
-      <pointLight color="#00f0ff" intensity={6.0} distance={50} />
+      <GLBModelLoader
+        modelPath="/models/creatures/whale.glb"
+        position={[0, 0, 0]}
+        scale={[3.5, 3.5, 3.5]}
+        emissiveColor="#00f0ff"
+        emissiveIntensity={1.5}
+      />
     </group>
   );
 }
@@ -156,14 +120,13 @@ export function DiverSilhouette({ scrollProgress = 0 }) {
 
   return (
     <group ref={diverRef}>
-      <mesh>
-        <capsuleGeometry args={[0.45, 2.0, 4, 12]} />
-        <meshBasicMaterial color="#020810" />
-      </mesh>
-      <mesh position={[0, -1.8, -0.6]} rotation={[0.6, 0, 0]}>
-        <boxGeometry args={[1.2, 0.1, 1.8]} />
-        <meshBasicMaterial color="#020810" />
-      </mesh>
+      <GLBModelLoader
+        modelPath="/models/creatures/diver.glb"
+        position={[0, 0, 0]}
+        scale={[0.8, 0.8, 0.8]}
+        emissiveColor="#42fff3"
+        emissiveIntensity={1.2}
+      />
     </group>
   );
 }
