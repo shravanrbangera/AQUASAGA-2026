@@ -32,7 +32,7 @@ export default function SubmergedCanyonWalls() {
 
   return (
     <group>
-      {/* LEFT & RIGHT TOWERING CANYON WALL ROCKS (Matching Reference Image 2) */}
+      {/* LEFT & RIGHT TOWERING CANYON WALL ROCKS */}
       <mesh position={[-28, -300, -20]} rotation={[0, 0.4, 0]}>
         <boxGeometry args={[20, 650, 40]} />
         <meshStandardMaterial color="#082230" roughness={0.95} />
@@ -41,6 +41,31 @@ export default function SubmergedCanyonWalls() {
         <boxGeometry args={[20, 650, 40]} />
         <meshStandardMaterial color="#082230" roughness={0.95} />
       </mesh>
+
+      {/* ANCIENT SUBMERGED ATLANTIS TEMPLE PILLARS & COLUMNS (Tech-Kingdom Vibe) */}
+      {[-40, -120, -200, -280, -360, -440, -520, -580].map((yPos, idx) => (
+        <group key={idx} position={[0, yPos, -15]}>
+          {/* Left Flanking Temple Column */}
+          <mesh position={[-18, 0, 0]} castShadow>
+            <cylinderGeometry args={[1.6, 2.2, 28, 16]} />
+            <meshStandardMaterial color="#0b1b26" roughness={0.8} />
+          </mesh>
+          <mesh position={[-18, 0, 0]}>
+            <torusGeometry args={[2.0, 0.2, 12, 24]} />
+            <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={1.2} />
+          </mesh>
+
+          {/* Right Flanking Temple Column */}
+          <mesh position={[18, 0, 0]} castShadow>
+            <cylinderGeometry args={[1.6, 2.2, 28, 16]} />
+            <meshStandardMaterial color="#0b1b26" roughness={0.8} />
+          </mesh>
+          <mesh position={[18, 0, 0]}>
+            <torusGeometry args={[2.0, 0.2, 12, 24]} />
+            <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={1.2} />
+          </mesh>
+        </group>
+      ))}
 
       {/* WHITE SANDY OCEAN FLOOR BED AT BOTTOM (1000m) */}
       <mesh position={[0, -620, -10]} rotation={[-Math.PI / 2 + 0.1, 0, 0]}>
@@ -66,10 +91,9 @@ export default function SubmergedCanyonWalls() {
         ))}
       </group>
 
-      {/* BIOLUMINESCENT MAGENTA & PURPLE MUSHROOM FLORA (Matching Reference Image 1) */}
+      {/* BIOLUMINESCENT MAGENTA & PURPLE MUSHROOM FLORA */}
       {[-100, -220, -340, -460, -580].map((yPos, idx) => (
         <group key={idx} position={[0, yPos, -12]}>
-          {/* Left Bioluminescent Mushroom Cluster */}
           <group position={[-15, 0, 0]}>
             <mesh position={[0, 2, 0]}>
               <cylinderGeometry args={[1.8, 0.4, 3, 16]} />
@@ -84,7 +108,6 @@ export default function SubmergedCanyonWalls() {
             <pointLight color="#f72585" intensity={3.0} distance={20} />
           </group>
 
-          {/* Right Bioluminescent Mushroom Cluster */}
           <group position={[15, 0, 0]}>
             <mesh position={[0, 2, 0]}>
               <cylinderGeometry args={[1.8, 0.4, 3, 16]} />
