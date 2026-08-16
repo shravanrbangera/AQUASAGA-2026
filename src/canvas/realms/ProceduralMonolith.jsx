@@ -64,6 +64,7 @@ export default function ProceduralMonolith({
   const groupRef = useRef();
   const ringRef = useRef();
   const vortexRef = useRef();
+  const innerVortexRef = useRef();
 
   const texture = useMemo(() => createDetailedStoneRuneTexture(runeText), [runeText]);
 
@@ -72,8 +73,8 @@ export default function ProceduralMonolith({
       map: texture,
       roughness: 0.35,
       metalness: 0.4,
-      clearcoat: 0.8,
-      clearcoatRoughness: 0.2,
+      clearcoat: 0.85,
+      clearcoatRoughness: 0.15,
       color: '#0d2232'
     });
   }, [texture]);
@@ -85,13 +86,16 @@ export default function ProceduralMonolith({
     }
     if (vortexRef.current) {
       vortexRef.current.rotation.z -= delta * 0.4;
-      vortexRef.current.material.opacity = 0.75 + Math.sin(t * 3.0) * 0.2;
+      vortexRef.current.material.opacity = 0.8 + Math.sin(t * 3.0) * 0.15;
+    }
+    if (innerVortexRef.current) {
+      innerVortexRef.current.rotation.z += delta * 0.6;
     }
   });
 
   return (
     <group ref={groupRef} position={position} scale={scale} rotation={rotation}>
-      {/* 1. FULLY BUILT ANCIENT CIRCULAR STONE PORTAL RING (Matching User Image Perfectly) */}
+      {/* 100% COMPLETE 3D ANCIENT STONE PORTAL RING MONUMENT */}
       {type === 'gate' && (
         <group position={[0, 0, 0]}>
           {/* Main Carved Stone Ring Torus */}
@@ -100,26 +104,44 @@ export default function ProceduralMonolith({
             <primitive object={stoneMaterial} attach="material" />
           </mesh>
 
+          {/* Inner Accent Stone Molding Ring */}
+          <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 0, 0.5]}>
+            <torusGeometry args={[9.5, 0.8, 24, 48]} />
+            <primitive object={stoneMaterial} attach="material" />
+          </mesh>
+
           {/* Glowing Inner Rune Energy Swirl Ring */}
-          <mesh ref={ringRef} position={[0, 0, 0.1]}>
+          <mesh ref={ringRef} position={[0, 0, 0.2]}>
             <ringGeometry args={[8.8, 11.2, 64]} />
             <meshBasicMaterial
               map={texture}
               color="#00f0ff"
               transparent
-              opacity={0.92}
+              opacity={0.95}
               side={THREE.DoubleSide}
               blending={THREE.AdditiveBlending}
             />
           </mesh>
 
-          {/* Central Blue Energy Vortex Swirl */}
+          {/* Outer Layer Swirling Blue Energy Vortex Core */}
           <mesh ref={vortexRef} position={[0, 0, -0.2]}>
             <ringGeometry args={[0, 8.5, 48]} />
             <meshBasicMaterial
               color="#00f0ff"
               transparent
-              opacity={0.82}
+              opacity={0.85}
+              side={THREE.DoubleSide}
+              blending={THREE.AdditiveBlending}
+            />
+          </mesh>
+
+          {/* Inner Layer Counter-Rotating Bright Plasma Vortex */}
+          <mesh ref={innerVortexRef} position={[0, 0, 0.1]}>
+            <ringGeometry args={[0, 5.5, 32]} />
+            <meshBasicMaterial
+              color="#ffffff"
+              transparent
+              opacity={0.65}
               side={THREE.DoubleSide}
               blending={THREE.AdditiveBlending}
             />
@@ -144,11 +166,34 @@ export default function ProceduralMonolith({
             );
           })}
 
-          <pointLight color="#00f0ff" intensity={6.0} distance={70} />
+          {/* Submerged Atlantis Tech-Temple Columns Flanking Portal Base */}
+          <group position={[-16, -10, -2]}>
+            <mesh castShadow>
+              <cylinderGeometry args={[1.5, 2.0, 18, 24]} />
+              <primitive object={stoneMaterial} attach="material" />
+            </mesh>
+            <mesh position={[0, 4, 0]}>
+              <torusGeometry args={[1.8, 0.3, 16, 32]} />
+              <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={2.0} />
+            </mesh>
+          </group>
+
+          <group position={[16, -10, -2]}>
+            <mesh castShadow>
+              <cylinderGeometry args={[1.5, 2.0, 18, 24]} />
+              <primitive object={stoneMaterial} attach="material" />
+            </mesh>
+            <mesh position={[0, 4, 0]}>
+              <torusGeometry args={[1.8, 0.3, 16, 32]} />
+              <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={2.0} />
+            </mesh>
+          </group>
+
+          <pointLight color="#00f0ff" intensity={6.5} distance={75} />
         </group>
       )}
 
-      {/* 2. FULLY BUILT ANCIENT OBELISK MONUMENT */}
+      {/* 2. 100% COMPLETE ANCIENT OBELISK MONUMENT */}
       {type === 'obelisk' && (
         <group position={[0, 0, 0]}>
           <mesh castShadow receiveShadow position={[0, 0, 0]}>
