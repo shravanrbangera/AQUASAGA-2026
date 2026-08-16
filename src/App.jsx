@@ -10,6 +10,7 @@ import LoadingScreen from './components/LoadingScreen';
 import RuneCursorTrail from './components/RuneCursorTrail';
 import TimelineRail from './components/TimelineRail';
 import SubmergedVignetteHUD from './components/SubmergedVignetteHUD';
+import ErrorBoundary from './components/ErrorBoundary';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -63,15 +64,17 @@ export default function App() {
         <LoadingScreen onComplete={() => setIsLoading(false)} />
       ) : (
         <>
-          {/* 4. Fixed 3D Canvas Background */}
-          <Scene
-            scrollProgress={scrollProgress}
-            onUpdateDepth={(depth, realmIdx) => {
-              setDepthMeters(depth);
-              setActiveRealmIndex(realmIdx);
-            }}
-            onOpenRegister={handleOpenRegister}
-          />
+          {/* 4. Fixed 3D Canvas Background with React Error Boundary Safeguard */}
+          <ErrorBoundary fallback={null}>
+            <Scene
+              scrollProgress={scrollProgress}
+              onUpdateDepth={(depth, realmIdx) => {
+                setDepthMeters(depth);
+                setActiveRealmIndex(realmIdx);
+              }}
+              onOpenRegister={handleOpenRegister}
+            />
+          </ErrorBoundary>
 
           {/* 5. Header Navigation */}
           <Navigation
@@ -83,7 +86,7 @@ export default function App() {
 
           {/* 6. Submerged Depth Indicator Gauge */}
           <DepthIndicator
-            depthMeters={depthMeters}
+            depth={depthMeters}
             activeRealmIndex={activeRealmIndex}
           />
 

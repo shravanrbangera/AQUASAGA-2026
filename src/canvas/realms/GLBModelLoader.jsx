@@ -1,9 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import * as THREE from 'three';
+import ErrorBoundary from '../../components/ErrorBoundary';
 
-export default function GLBModelLoader({
-  modelPath = '/assets/dolphin_anim.glb',
+function SafeGLBModel({
+  modelPath,
   position = [0, 0, 0],
   scale = [1, 1, 1],
   rotation = [0, 0, 0],
@@ -12,43 +13,41 @@ export default function GLBModelLoader({
 }) {
   const groupRef = useRef();
 
-  try {
-    const { scene, animations } = useGLTF(modelPath);
-    const { actions } = useAnimations(animations, groupRef);
+  const gltf = useGLTF(modelPath);
+  const { scene, animations } = gltf || {};
+  const { actions } = useAnimations(animations || [], groupRef);
 
-    useEffect(() => {
-      console.log(`[GLBModelLoader] Model loaded successfully: ${modelPath}`);
-      console.log(`[GLBModelLoader] Animation clips found:`, animations ? animations.map(a => a.name) : []);
-
-      if (actions && Object.keys(actions).length > 0) {
-        const firstAction = Object.values(actions)[0];
-        if (firstAction) {
-          firstAction.reset().fadeIn(0.5).play();
-        }
-      }
-
+  useEffect(() => {
+    if (scene) {
       scene.traverse((child) => {
-        if (child.isMesh) {
-          child.material = new THREE.MeshPhysicalMaterial({
-            color: '#00a8e8',
-            emissive: emissiveColor,
-            emissiveIntensity: emissiveIntensity,
-            roughness: 0.2,
-            metalness: 0.7,
-            clearcoat: 1.0,
-            clearcoatRoughness: 0.1
-          });
+        if (child.isMesh && child.material) {
+          child.material.emissive = new THREE.Color(emissiveColor);
+          child.material.emissiveIntensity = emissiveIntensity;
         }
       });
-    }, [actions, animations, modelPath, scene, emissiveColor, emissiveIntensity]);
+    }
 
-    return (
-      <group ref={groupRef} position={position} scale={scale} rotation={rotation}>
-        <primitive object={scene} />
-      </group>
-    );
-  } catch (err) {
-    console.warn(`[GLBModelLoader] Failed to load GLB model at ${modelPath}:`, err);
-    return null;
-  }
+    if (actions && Object.keys(actions).length > 0) {
+      const firstAction = Object.values(actions)[0];
+      if (firstAction) {
+        firstAction.reset().fadeIn(0.5).play();
+      }
+    }
+  }, [actions, animations, scene, emissiveColor, emissiveIntensity]);
+
+  if (!scene) return null;
+
+  return (
+    <group ref={groupRef} position={position} scale={scale} rotation={rotation}>
+      <primitive object={scene.clone()} />
+    </group>
+  );
+}
+
+export default function GLBModelLoader(props) {
+  return (
+    <ErrorBoundary fallback={null}>
+      <SafeGLBModel {...props} />
+    </ErrorBoundary>
+  );
 }
