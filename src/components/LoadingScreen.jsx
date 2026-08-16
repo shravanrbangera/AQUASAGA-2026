@@ -14,20 +14,27 @@ export default function LoadingScreen({ onEnter, onComplete }) {
         if (prev >= 100) {
           clearInterval(timer);
           setIsLoaded(true);
+          // Auto-reveal website when loaded
+          setTimeout(() => {
+            setIsDiving(true);
+            setTimeout(() => {
+              if (typeof onEnter === 'function') onEnter();
+              if (typeof onComplete === 'function') onComplete();
+            }, 500);
+          }, 800);
           return 100;
         }
-        return prev + Math.floor(Math.random() * 15) + 8;
+        return prev + Math.floor(Math.random() * 15) + 10;
       });
-    }, 70);
+    }, 50);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [onEnter, onComplete]);
 
   const handleEnterClick = (e) => {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     setIsDiving(true);
 
-    // Trigger ambient ocean soundscape
     try {
       if (soundscape && typeof soundscape.toggleSound === 'function') {
         soundscape.toggleSound();
@@ -36,11 +43,10 @@ export default function LoadingScreen({ onEnter, onComplete }) {
       console.warn('Audio play error:', err);
     }
 
-    // Play creative transition then reveal 3D Ocean
     setTimeout(() => {
       if (typeof onEnter === 'function') onEnter();
       if (typeof onComplete === 'function') onComplete();
-    }, 600);
+    }, 500);
   };
 
   return (
@@ -53,10 +59,10 @@ export default function LoadingScreen({ onEnter, onComplete }) {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.25)_0%,rgba(2,16,26,0.95)_75%)] pointer-events-none" />
       <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,240,255,0.08)_50%,transparent_100%)] pointer-events-none animate-pulse" />
 
-      {/* Main Entrance Portal Slab — Perfectly Scaled for Mobile Devices */}
+      {/* Main Entrance Portal Slab */}
       <div className="relative max-w-[92vw] sm:max-w-2xl w-full p-5 sm:p-12 glass-panel-glow border-2 border-[#00f0ff] rounded-3xl backdrop-blur-2xl bg-[rgba(2,16,26,0.9)] shadow-[0_0_100px_rgba(0,240,255,0.6)] text-center space-y-4 sm:space-y-6 animate-float z-10">
 
-        {/* CREATIVE TRANSPARENT AQUASAGA LOGO — FLUID RESPONSIVE CONTAINMENT */}
+        {/* CREATIVE TRANSPARENT AQUASAGA LOGO */}
         <div className="relative inline-block mx-auto max-w-full px-2">
           <img
             src="/assets/aquasaga_logo.png"
