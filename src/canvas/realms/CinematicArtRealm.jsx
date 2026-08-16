@@ -2,7 +2,7 @@ import React, { useRef, useMemo } from 'react';
 import { useFrame, useLoader } from '@react-three/fiber';
 import * as THREE from 'three';
 
-// Custom GLSL Shader for Seamless Water Ripple & Edge Fade (Removes Flat Rectangle Edges!)
+// Custom GLSL Shader for Water Caustics & Glowing Rune Emissive Highlights
 const WaterArtShaderMaterial = {
   uniforms: {
     uTexture: { value: null },
@@ -18,8 +18,8 @@ const WaterArtShaderMaterial = {
       vNormal = normal;
       vec3 pos = position;
       // Gentle 3D vertex wave animation
-      pos.z += sin(pos.x * 0.5 + uTime * 1.2) * 0.4;
-      pos.z += cos(pos.y * 0.5 + uTime * 1.2) * 0.4;
+      pos.z += sin(pos.x * 0.5 + uTime * 1.2) * 0.3;
+      pos.z += cos(pos.y * 0.5 + uTime * 1.2) * 0.3;
       gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
     }
   `,
@@ -31,24 +31,18 @@ const WaterArtShaderMaterial = {
     void main() {
       // Water caustics UV distortion
       vec2 uv = vUv;
-      uv.x += sin(uv.y * 12.0 + uTime * 1.8) * 0.006;
-      uv.y += cos(uv.x * 12.0 + uTime * 1.8) * 0.006;
+      uv.x += sin(uv.y * 12.0 + uTime * 1.8) * 0.005;
+      uv.y += cos(uv.x * 12.0 + uTime * 1.8) * 0.005;
 
       vec4 texColor = texture2D(uTexture, uv);
 
-      // Radial Alpha Vignette Fade (Melts box edges into dark 3D ocean fog!)
-      vec2 center = vUv - vec2(0.5);
-      float dist = length(center * vec2(1.1, 1.4));
-      float alpha = smoothstep(0.48, 0.22, dist);
-
       // Emissive Cyan Highlights on bright rune pixels
-      float runeBrightness = max(texColor.r, max(texColor.g, texColor.b));
       vec3 finalColor = texColor.rgb;
-      if (texColor.g > 0.6 && texColor.b > 0.6) {
-        finalColor += uGlowColor * (sin(uTime * 2.5) * 0.3 + 0.4);
+      if (texColor.g > 0.5 && texColor.b > 0.5) {
+        finalColor += uGlowColor * (sin(uTime * 2.5) * 0.25 + 0.35);
       }
 
-      gl_FragColor = vec4(finalColor, texColor.a * alpha);
+      gl_FragColor = vec4(finalColor, texColor.a * 0.95);
     }
   `
 };
@@ -56,9 +50,8 @@ const WaterArtShaderMaterial = {
 export default function CinematicArtRealm({
   position = [0, 0, 0],
   scale = [28, 48, 1],
-  texturePath = '/assets/realm_obelisk.jpg',
-  runeGlowColor = '#00f0ff',
-  monolithType = 'obelisk'
+  texturePath = '/assets/realm_portal.jpg',
+  runeGlowColor = '#00f0ff'
 }) {
   const meshRef = useRef();
   const ringRef = useRef();
@@ -88,7 +81,6 @@ export default function CinematicArtRealm({
       shaderMatRef.current.uniforms.uTime.value = t;
     }
     if (meshRef.current) {
-      // Silky smooth floating inertia
       meshRef.current.position.y = Math.sin(t * 0.6) * 0.4;
       meshRef.current.rotation.y = Math.sin(t * 0.4) * 0.04;
     }
@@ -96,13 +88,13 @@ export default function CinematicArtRealm({
       ringRef.current.rotation.z += delta * 0.25;
     }
     if (lightRef.current) {
-      lightRef.current.intensity = 3.0 + Math.sin(t * 2) * 0.9;
+      lightRef.current.intensity = 4.0 + Math.sin(t * 2) * 1.0;
     }
   });
 
   return (
     <group position={position}>
-      {/* 3D Depth Shader Mesh with Edge Fade & Water Caustics */}
+      {/* 3D Realm Artwork Mesh with Water Caustics */}
       <mesh ref={meshRef} position={[0, 0, 0]} scale={scale}>
         <planeGeometry args={[1, 1, 32, 32]} />
         <shaderMaterial ref={shaderMatRef} args={[shaderArgs]} />
@@ -116,13 +108,13 @@ export default function CinematicArtRealm({
           <meshBasicMaterial
             color="#00f0ff"
             transparent
-            opacity={0.65}
+            opacity={0.75}
             side={THREE.DoubleSide}
             blending={THREE.AdditiveBlending}
           />
         </mesh>
 
-        {/* 3D Physical Glowing Octahedron Crystal at Base */}
+        {/* 3D Physical Glowing Octahedron Crystal */}
         <mesh position={[0, -12, 3]} rotation={[0.4, 0.4, 0]}>
           <octahedronGeometry args={[3.5, 0]} />
           <meshStandardMaterial
@@ -141,8 +133,8 @@ export default function CinematicArtRealm({
           ref={lightRef}
           position={[0, 2, 5]}
           color={runeGlowColor}
-          intensity={3.5}
-          distance={50}
+          intensity={4.5}
+          distance={55}
         />
       </group>
     </group>
