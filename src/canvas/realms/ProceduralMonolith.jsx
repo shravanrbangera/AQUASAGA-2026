@@ -85,15 +85,15 @@ export default function ProceduralMonolith({
     }
     if (vortexRef.current) {
       vortexRef.current.rotation.z -= delta * 0.4;
-      vortexRef.current.material.opacity = 0.7 + Math.sin(t * 3.0) * 0.2;
+      vortexRef.current.material.opacity = 0.75 + Math.sin(t * 3.0) * 0.2;
     }
   });
 
   return (
     <group ref={groupRef} position={position} scale={scale} rotation={rotation}>
-      {/* 1. FULLY BUILT ANCIENT CIRCULAR STONE PORTAL RING (Matching User Image) */}
+      {/* 1. FULLY BUILT ANCIENT CIRCULAR STONE PORTAL RING (Matching User Image Perfectly) */}
       {type === 'gate' && (
-        <group position={[0, 10, 0]}>
+        <group position={[0, 0, 0]}>
           {/* Main Carved Stone Ring Torus */}
           <mesh rotation={[Math.PI / 2, 0, 0]} castShadow receiveShadow>
             <torusGeometry args={[12, 2.5, 32, 64]} />
@@ -107,7 +107,7 @@ export default function ProceduralMonolith({
               map={texture}
               color="#00f0ff"
               transparent
-              opacity={0.88}
+              opacity={0.92}
               side={THREE.DoubleSide}
               blending={THREE.AdditiveBlending}
             />
@@ -119,7 +119,7 @@ export default function ProceduralMonolith({
             <meshBasicMaterial
               color="#00f0ff"
               transparent
-              opacity={0.75}
+              opacity={0.82}
               side={THREE.DoubleSide}
               blending={THREE.AdditiveBlending}
             />
@@ -138,28 +138,25 @@ export default function ProceduralMonolith({
                 </mesh>
                 <mesh position={[0, 0, 1.6]}>
                   <boxGeometry args={[2.8, 1.6, 0.2]} />
-                  <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={2.0} />
+                  <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={2.5} />
                 </mesh>
               </group>
             );
           })}
 
-          <pointLight color="#00f0ff" intensity={5.0} distance={60} />
+          <pointLight color="#00f0ff" intensity={6.0} distance={70} />
         </group>
       )}
 
       {/* 2. FULLY BUILT ANCIENT OBELISK MONUMENT */}
       {type === 'obelisk' && (
-        <group>
-          {/* Main Giant Monolith Shaft */}
-          <mesh castShadow receiveShadow position={[0, 18, 0]}>
-            <boxGeometry args={[8, 44, 8, 8, 32, 8]} />
+        <group position={[0, 0, 0]}>
+          <mesh castShadow receiveShadow position={[0, 0, 0]}>
+            <boxGeometry args={[8, 38, 8, 8, 32, 8]} />
             <primitive object={stoneMaterial} attach="material" />
           </mesh>
-
-          {/* Glowing Vertical Rune Face */}
-          <mesh position={[0, 18, 4.02]}>
-            <planeGeometry args={[7, 42]} />
+          <mesh position={[0, 0, 4.02]}>
+            <planeGeometry args={[7, 36]} />
             <meshStandardMaterial
               map={texture}
               emissive="#00f0ff"
@@ -168,45 +165,32 @@ export default function ProceduralMonolith({
               opacity={0.95}
             />
           </mesh>
-
-          {/* Pyramidion Cap Stone */}
-          <mesh position={[0, 42, 0]} rotation={[0, Math.PI / 4, 0]}>
+          <mesh position={[0, 21, 0]} rotation={[0, Math.PI / 4, 0]}>
             <coneGeometry args={[5.8, 8, 4]} />
             <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={2.5} />
           </mesh>
-
-          {/* Flanking Secondary Pillars */}
-          <mesh position={[-11, 14, -3]} castShadow>
-            <boxGeometry args={[6, 34, 6]} />
-            <primitive object={stoneMaterial} attach="material" />
-          </mesh>
-          <mesh position={[11, 14, -3]} castShadow>
-            <boxGeometry args={[6, 34, 6]} />
-            <primitive object={stoneMaterial} attach="material" />
-          </mesh>
-
-          <pointLight position={[0, 18, 6]} color="#00f0ff" intensity={4.5} distance={55} />
+          <pointLight position={[0, 0, 6]} color="#00f0ff" intensity={4.5} distance={55} />
         </group>
       )}
 
       {/* 3. OVERGROWN RUNE SLAB */}
       {type === 'runestone' && (
-        <group>
-          <mesh castShadow position={[0, 9, 0]}>
+        <group position={[0, 0, 0]}>
+          <mesh castShadow position={[0, 0, 0]}>
             <cylinderGeometry args={[5.5, 6.5, 18, 32]} />
             <primitive object={stoneMaterial} attach="material" />
           </mesh>
-          <mesh position={[0, 9, 5.6]}>
+          <mesh position={[0, 0, 5.6]}>
             <planeGeometry args={[9, 16]} />
             <meshBasicMaterial map={texture} color="#00f0ff" transparent opacity={0.95} />
           </mesh>
-          <pointLight position={[0, 9, 6]} color="#00f0ff" intensity={4.0} distance={40} />
+          <pointLight position={[0, 0, 6]} color="#00f0ff" intensity={4.0} distance={40} />
         </group>
       )}
 
       {/* 4. GLOWING QUARTZ CRYSTALS */}
       {type === 'crystal' && (
-        <group>
+        <group position={[0, 0, 0]}>
           {[-3, 0, 3].map((xOffset, idx) => (
             <mesh key={idx} position={[xOffset * 2.5, idx * 2.5, idx]} rotation={[0.2 * idx, 0.5 * idx, 0.3]}>
               <octahedronGeometry args={[4 + idx, 0]} />
