@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Anchor, Compass, Radio, Activity } from 'lucide-react';
+import { Anchor, Radio, Activity } from 'lucide-react';
 
 export default function DepthIndicator({ depth = 0 }) {
   const [sonarPing, setSonarPing] = useState(false);
@@ -12,12 +12,14 @@ export default function DepthIndicator({ depth = 0 }) {
     return () => clearInterval(interval);
   }, []);
 
-  // Determine current Ocean Depth Zone
+  // Determine current Ocean Depth Zone matching prompt structure
   const getZoneLabel = (d) => {
-    if (d < 150) return 'EPIPELAGIC SUNLIGHT ZONE';
-    if (d < 400) return 'MESOPELAGIC TWILIGHT ZONE';
-    if (d < 700) return 'BATHYPELAGIC MIDNIGHT ZONE';
-    return 'HADAL ABYSSAL CORE';
+    if (d < 120) return 'ZONE 01 — SURFACE REEF';
+    if (d < 280) return 'ZONE 02 — SHALLOW REEF';
+    if (d < 480) return 'ZONE 03 — TWILIGHT ZONE';
+    if (d < 680) return 'ZONE 04 — MIDNIGHT ZONE';
+    if (d < 880) return 'ZONE 05 — ABYSSAL ZONE';
+    return 'ZONE 06 — HADAL TRENCH';
   };
 
   const zoneLabel = getZoneLabel(depth);

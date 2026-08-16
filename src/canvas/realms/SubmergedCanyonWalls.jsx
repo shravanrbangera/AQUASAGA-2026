@@ -4,76 +4,126 @@ import * as THREE from 'three';
 
 export default function SubmergedCanyonWalls() {
   const kelpGroupRef = useRef();
+  const ventsRef = useRef();
 
-  // Kelp Stalks & Leaves along canyon walls
+  // Kelp Stalks along upper canyon walls
   const kelpData = useMemo(() => {
     const items = [];
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 35; i++) {
       const isLeft = i % 2 === 0;
       items.push({
-        x: isLeft ? -16 - Math.random() * 8 : 16 + Math.random() * 8,
-        y: -i * 15,
+        x: isLeft ? -18 - Math.random() * 8 : 18 + Math.random() * 8,
+        y: -i * 14,
         z: -Math.random() * 20,
-        height: 25 + Math.random() * 15,
-        phase: Math.random() * Math.PI * 2
+        height: 22 + Math.random() * 14
       });
     }
     return items;
   }, []);
 
-  useFrame((state) => {
+  // 100 Hydrothermal Vent Smoke Particles at Hadal Trench (850m - 1000m)
+  const particleCount = 100;
+  const ventParticles = useMemo(() => {
+    const p = new Float32Array(particleCount * 3);
+    for (let i = 0; i < particleCount; i++) {
+      p[i * 3] = (Math.random() - 0.5) * 16;
+      p[i * 3 + 1] = -550 - Math.random() * 80;
+      p[i * 3 + 2] = -15 + (Math.random() - 0.5) * 12;
+    }
+    return p;
+  }, [particleCount]);
+
+  useFrame((state, delta) => {
     const t = state.clock.elapsedTime;
+
+    // Kelp Swaying in Ocean Current
     if (kelpGroupRef.current) {
       kelpGroupRef.current.children.forEach((kelp, idx) => {
         kelp.rotation.z = Math.sin(t * 0.8 + idx) * 0.08;
       });
     }
+
+    // Hydrothermal Smoke Plumes Rising
+    if (ventsRef.current) {
+      const positions = ventsRef.current.geometry.attributes.position.array;
+      for (let i = 0; i < particleCount; i++) {
+        positions[i * 3 + 1] += delta * 4.0; // Smoke rises upward
+        if (positions[i * 3 + 1] > -500) {
+          positions[i * 3 + 1] = -600; // Loop smoke plume back to vents
+        }
+      }
+      ventsRef.current.geometry.attributes.position.needsUpdate = true;
+    }
   });
 
   return (
     <group>
-      {/* LEFT & RIGHT TOWERING CANYON WALL ROCKS */}
-      <mesh position={[-28, -300, -20]} rotation={[0, 0.4, 0]}>
-        <boxGeometry args={[20, 650, 40]} />
-        <meshStandardMaterial color="#082230" roughness={0.95} />
+      {/* 1. NATURAL UNDERWATER CANYON CLIFF WALLS (Zero Artificial Poles) */}
+      <mesh position={[-32, -300, -20]} rotation={[0, 0.4, 0]}>
+        <boxGeometry args={[26, 680, 45]} />
+        <meshStandardMaterial color="#061824" roughness={0.95} />
       </mesh>
-      <mesh position={[28, -300, -20]} rotation={[0, -0.4, 0]}>
-        <boxGeometry args={[20, 650, 40]} />
-        <meshStandardMaterial color="#082230" roughness={0.95} />
+      <mesh position={[32, -300, -20]} rotation={[0, -0.4, 0]}>
+        <boxGeometry args={[26, 680, 45]} />
+        <meshStandardMaterial color="#061824" roughness={0.95} />
       </mesh>
 
-      {/* ANCIENT SUBMERGED ATLANTIS TEMPLE PILLARS & COLUMNS (Tech-Kingdom Vibe) */}
-      {[-40, -120, -200, -280, -360, -440, -520, -580].map((yPos, idx) => (
-        <group key={idx} position={[0, yPos, -15]}>
-          {/* Left Flanking Temple Column */}
-          <mesh position={[-18, 0, 0]} castShadow>
-            <cylinderGeometry args={[1.6, 2.2, 28, 16]} />
-            <meshStandardMaterial color="#0b1b26" roughness={0.8} />
-          </mesh>
-          <mesh position={[-18, 0, 0]}>
-            <torusGeometry args={[2.0, 0.2, 12, 24]} />
-            <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={1.2} />
+      {/* 2. NATURAL ROCK ARCHES & CAVE REEF SHELVES */}
+      {[-80, -200, -320, -440, -560].map((yPos, idx) => (
+        <group key={idx} position={[0, yPos, -18]}>
+          {/* Left Rock Cliff Outcropping */}
+          <mesh position={[-18, 0, 0]} rotation={[0.2, 0.5, 0.1]} castShadow receiveShadow>
+            <dodecahedronGeometry args={[8, 1]} />
+            <meshStandardMaterial color="#081e2b" roughness={0.9} />
           </mesh>
 
-          {/* Right Flanking Temple Column */}
-          <mesh position={[18, 0, 0]} castShadow>
-            <cylinderGeometry args={[1.6, 2.2, 28, 16]} />
-            <meshStandardMaterial color="#0b1b26" roughness={0.8} />
-          </mesh>
-          <mesh position={[18, 0, 0]}>
-            <torusGeometry args={[2.0, 0.2, 12, 24]} />
-            <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={1.2} />
+          {/* Right Rock Cliff Outcropping */}
+          <mesh position={[18, 0, 0]} rotation={[-0.2, -0.5, -0.1]} castShadow receiveShadow>
+            <dodecahedronGeometry args={[8, 1]} />
+            <meshStandardMaterial color="#081e2b" roughness={0.9} />
           </mesh>
         </group>
       ))}
 
-      {/* WHITE SANDY OCEAN FLOOR BED AT BOTTOM (1000m) */}
+      {/* 3. HADAL TRENCH HYDROTHERMAL VENT SMOKER CHIMNEYS (850m - 1000m) */}
+      <group position={[0, -590, -20]}>
+        <mesh position={[-8, 0, 0]}>
+          <cylinderGeometry args={[1.2, 2.8, 18, 16]} />
+          <meshStandardMaterial color="#030a10" roughness={0.95} />
+        </mesh>
+        <pointLight position={[-8, 9, 0]} color="#00f0ff" intensity={5.0} distance={25} />
+
+        <mesh position={[8, 0, 0]}>
+          <cylinderGeometry args={[1.2, 2.8, 18, 16]} />
+          <meshStandardMaterial color="#030a10" roughness={0.95} />
+        </mesh>
+        <pointLight position={[8, 9, 0]} color="#42fff3" intensity={5.0} distance={25} />
+      </group>
+
+      {/* Hydrothermal Smoke Plume Particles */}
+      <points ref={ventsRef}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            args={[ventParticles, 3]}
+          />
+        </bufferGeometry>
+        <pointsMaterial
+          size={1.2}
+          color="#00f0ff"
+          transparent
+          opacity={0.6}
+          blending={THREE.AdditiveBlending}
+        />
+      </points>
+
+      {/* 4. BLACK SAND TRENCH SEABED AT HADAL CORE (1000m) */}
       <mesh position={[0, -620, -10]} rotation={[-Math.PI / 2 + 0.1, 0, 0]}>
-        <planeGeometry args={[120, 120]} />
-        <meshStandardMaterial color="#b2d8d8" roughness={0.8} />
+        <planeGeometry args={[130, 130]} />
+        <meshStandardMaterial color="#040e17" roughness={0.95} />
       </mesh>
 
-      {/* TOWERING GREEN KELP FOREST STALKS */}
+      {/* 5. TOWERING GREEN KELP FOREST STALKS (Surface & Shallow Zones) */}
       <group ref={kelpGroupRef}>
         {kelpData.map((item, idx) => (
           <group key={idx} position={[item.x, item.y, item.z]}>
@@ -91,10 +141,10 @@ export default function SubmergedCanyonWalls() {
         ))}
       </group>
 
-      {/* BIOLUMINESCENT MAGENTA & PURPLE MUSHROOM FLORA */}
-      {[-100, -220, -340, -460, -580].map((yPos, idx) => (
-        <group key={idx} position={[0, yPos, -12]}>
-          <group position={[-15, 0, 0]}>
+      {/* 6. BIOLUMINESCENT MAGENTA & PURPLE MUSHROOM FLORA */}
+      {[-120, -240, -360, -480].map((yPos, idx) => (
+        <group key={idx} position={[0, yPos, -14]}>
+          <group position={[-16, 0, 0]}>
             <mesh position={[0, 2, 0]}>
               <cylinderGeometry args={[1.8, 0.4, 3, 16]} />
               <meshStandardMaterial
@@ -108,7 +158,7 @@ export default function SubmergedCanyonWalls() {
             <pointLight color="#f72585" intensity={3.0} distance={20} />
           </group>
 
-          <group position={[15, 0, 0]}>
+          <group position={[16, 0, 0]}>
             <mesh position={[0, 2, 0]}>
               <cylinderGeometry args={[1.8, 0.4, 3, 16]} />
               <meshStandardMaterial
