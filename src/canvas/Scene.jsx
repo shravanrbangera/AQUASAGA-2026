@@ -17,7 +17,7 @@ export default function Scene({ scrollProgress, onUpdateDepth, onOpenRegister })
     <div className="canvas-container">
       <Canvas
         camera={{ position: [0, 0, 35], fov: 65, near: 0.1, far: 850 }}
-        gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+        gl={{ antialias: true, alpha: false, powerPreference: 'high-performance', precision: 'mediump' }}
         onCreated={({ gl }) => {
           gl.setClearColor('#003554');
         }}
@@ -29,8 +29,8 @@ export default function Scene({ scrollProgress, onUpdateDepth, onOpenRegister })
           {/* OVERHEAD COLOSSAL HUMPBACK WHALE SWIMMING IN SUNSHAFTS */}
           <OverheadHumpbackWhale />
 
-          {/* MASSIVE SWIRLING FISH VORTEX TORNADO (800 Fishes) */}
-          <SwirlingFishVortex count={800} />
+          {/* OPTIMIZED SWIRLING FISH VORTEX TORNADO (180 Fishes) */}
+          <SwirlingFishVortex count={180} />
 
           {/* SCUBA DIVER SILHOUETTE SWIMMING DOWN */}
           <DiverSilhouette scrollProgress={scrollProgress} />
@@ -44,7 +44,7 @@ export default function Scene({ scrollProgress, onUpdateDepth, onOpenRegister })
           {/* 3D SUBMARINE RESEARCH BASE HABITAT POD */}
           <SubmarineBase position={[-12, -320, -15]} scale={[1.3, 1.3, 1.3]} />
 
-          {/* DEPTH-BASED MARINE LIFE ECOSYSTEM (Surface -> Hadal Trench) */}
+          {/* DEPTH-BASED MARINE LIFE ECOSYSTEM (Optimized Lightweight Swimming) */}
           <MarineLife scrollProgress={scrollProgress} />
 
           {/* Smooth Scroll Vertical Descent Camera Trajectory with Interactive Mouse Parallax */}
