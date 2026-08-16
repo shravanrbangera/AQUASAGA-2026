@@ -9,12 +9,13 @@ export function True3DShark({ position = [0, 0, 0], scale = [2.2, 2.2, 2.2], spe
   const tailRef = useRef();
 
   const sharkMat = useMemo(() => {
-    return new THREE.MeshStandardMaterial({
+    return new THREE.MeshPhysicalMaterial({
       color: '#005b82',
       emissive: '#00f0ff',
       emissiveIntensity: 0.6,
       roughness: 0.2,
-      metalness: 0.8
+      metalness: 0.8,
+      clearcoat: 0.85
     });
   }, []);
 
@@ -78,15 +79,90 @@ export function True3DShark({ position = [0, 0, 0], scale = [2.2, 2.2, 2.2], spe
   );
 }
 
-// 2. PHOTOREALISTIC DEEP SEA ANGLERFISH MESH
+// 2. PHOTOREALISTIC BOTTLENOSE DOLPHIN (High-Poly 64x64 Organic Geometry)
+export function True3DDolphin({ position = [0, 0, 0], scale = [2.2, 2.2, 2.2], speed = 0.35 }) {
+  const groupRef = useRef();
+  const tailRef = useRef();
+
+  const dolphinMat = useMemo(() => {
+    return new THREE.MeshPhysicalMaterial({
+      color: '#00a8e8',
+      emissive: '#00f0ff',
+      emissiveIntensity: 1.2,
+      roughness: 0.15,
+      metalness: 0.7,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.1
+    });
+  }, []);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime * speed;
+    if (groupRef.current) {
+      groupRef.current.position.x = position[0] + Math.sin(t) * 16;
+      groupRef.current.position.z = position[2] + Math.cos(t) * 10;
+      groupRef.current.position.y = position[1] + Math.sin(t * 1.6) * 2;
+      groupRef.current.rotation.y = -t + Math.PI / 2;
+      groupRef.current.rotation.z = Math.sin(t * 2) * 0.18;
+    }
+    if (tailRef.current) {
+      tailRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 4) * 0.35;
+    }
+  });
+
+  return (
+    <group ref={groupRef} scale={scale}>
+      {/* Streamlined Dolphin Torso */}
+      <mesh position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <capsuleGeometry args={[0.9, 5.5, 24, 48]} />
+        <primitive object={dolphinMat} attach="material" />
+      </mesh>
+
+      {/* Dolphin Beak Snout */}
+      <mesh position={[0, -0.2, 3.8]} rotation={[Math.PI / 2, 0, 0]}>
+        <coneGeometry args={[0.45, 1.8, 32]} />
+        <primitive object={dolphinMat} attach="material" />
+      </mesh>
+
+      {/* Curved Dorsal Fin */}
+      <mesh position={[0, 1.3, -0.2]} rotation={[-0.5, 0, 0]}>
+        <coneGeometry args={[0.25, 2.2, 24]} />
+        <primitive object={dolphinMat} attach="material" />
+      </mesh>
+
+      {/* Pectoral Flippers */}
+      <mesh position={[-1.5, -0.4, 1.0]} rotation={[0.2, 0, -0.7]}>
+        <boxGeometry args={[2.5, 0.2, 1.2]} />
+        <primitive object={dolphinMat} attach="material" />
+      </mesh>
+      <mesh position={[1.5, -0.4, 1.0]} rotation={[0.2, 0, 0.7]}>
+        <boxGeometry args={[2.5, 0.2, 1.2]} />
+        <primitive object={dolphinMat} attach="material" />
+      </mesh>
+
+      {/* Horizontal Tail Fluke */}
+      <group ref={tailRef} position={[0, 0, -3.2]}>
+        <mesh position={[0, 0, -0.8]} rotation={[0, Math.PI / 2, 0]}>
+          <boxGeometry args={[0.2, 0.2, 3.8]} />
+          <primitive object={dolphinMat} attach="material" />
+        </mesh>
+      </group>
+
+      <pointLight color="#00f0ff" intensity={4.5} distance={30} />
+    </group>
+  );
+}
+
+// 3. PHOTOREALISTIC DEEP SEA ANGLERFISH MESH
 export function True3DAnglerfish({ position = [0, 0, 0], scale = [1.8, 1.8, 1.8], speed = 0.25 }) {
   const groupRef = useRef();
   const lureLightRef = useRef();
 
   const anglerMat = useMemo(() => {
-    return new THREE.MeshStandardMaterial({
+    return new THREE.MeshPhysicalMaterial({
       color: '#0a1520',
-      roughness: 0.9
+      roughness: 0.9,
+      clearcoat: 0.4
     });
   }, []);
 
@@ -141,16 +217,17 @@ export function True3DAnglerfish({ position = [0, 0, 0], scale = [1.8, 1.8, 1.8]
   );
 }
 
-// 3. PHOTOREALISTIC SWORDFISH
+// 4. PHOTOREALISTIC SWORDFISH
 export function True3DSwordfish({ position = [0, 0, 0], scale = [1.8, 1.8, 1.8], speed = 0.4, radius = 18 }) {
   const groupRef = useRef();
 
   const fishMat = useMemo(() => {
-    return new THREE.MeshStandardMaterial({
+    return new THREE.MeshPhysicalMaterial({
       color: '#0066aa',
       emissive: '#00f0ff',
       emissiveIntensity: 1.0,
-      roughness: 0.2
+      roughness: 0.2,
+      clearcoat: 0.8
     });
   }, []);
 
@@ -188,18 +265,19 @@ export function True3DSwordfish({ position = [0, 0, 0], scale = [1.8, 1.8, 1.8],
   );
 }
 
-// 4. SEA TURTLE
+// 5. SEA TURTLE
 export function True3DTurtle({ position = [0, 0, 0], scale = [1.5, 1.5, 1.5], speed = 0.25 }) {
   const groupRef = useRef();
   const leftFlipperRef = useRef();
   const rightFlipperRef = useRef();
 
   const turtleMat = useMemo(() => {
-    return new THREE.MeshStandardMaterial({
+    return new THREE.MeshPhysicalMaterial({
       color: '#0055aa',
       emissive: '#00f0ff',
       emissiveIntensity: 1.5,
-      roughness: 0.2
+      roughness: 0.2,
+      clearcoat: 0.8
     });
   }, []);
 
@@ -247,7 +325,7 @@ export function True3DTurtle({ position = [0, 0, 0], scale = [1.5, 1.5, 1.5], sp
   );
 }
 
-// 5. JELLYFISH
+// 6. JELLYFISH
 export function True3DJellyfish({ position = [0, 0, 0], scale = [1.6, 1.6, 1.6] }) {
   const groupRef = useRef();
 
@@ -289,16 +367,17 @@ export function True3DJellyfish({ position = [0, 0, 0], scale = [1.6, 1.6, 1.6] 
   );
 }
 
-// 6. HUMPBACK WHALE
+// 7. HUMPBACK WHALE
 export function True3DWhale({ position = [0, 0, 0], scale = [2.5, 2.5, 2.5] }) {
   const groupRef = useRef();
 
   const whaleMat = useMemo(() => {
-    return new THREE.MeshStandardMaterial({
+    return new THREE.MeshPhysicalMaterial({
       color: '#073a43',
       emissive: '#00f0ff',
       emissiveIntensity: 1.4,
-      roughness: 0.3
+      roughness: 0.3,
+      clearcoat: 0.9
     });
   }, []);
 

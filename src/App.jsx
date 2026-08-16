@@ -9,6 +9,7 @@ import RegistrationModal from './components/RegistrationModal';
 import LoadingScreen from './components/LoadingScreen';
 import RuneCursorTrail from './components/RuneCursorTrail';
 import TimelineRail from './components/TimelineRail';
+import SubmergedVignetteHUD from './components/SubmergedVignetteHUD';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -51,15 +52,18 @@ export default function App() {
 
   return (
     <main className="relative min-h-screen bg-[#031521] text-[#e8f9ff]">
-      {/* 1. Interactive Bioluminescent Cursor Trail */}
+      {/* 1. Interactive Bioluminescent Plasma Cursor Trail */}
       <RuneCursorTrail />
 
-      {/* 2. Preloader Screen */}
+      {/* 2. Real-World Underwater Diving Visor & Water Refraction Vignette */}
+      <SubmergedVignetteHUD />
+
+      {/* 3. Preloader Screen */}
       {isLoading ? (
         <LoadingScreen onComplete={() => setIsLoading(false)} />
       ) : (
         <>
-          {/* 3. Fixed 3D Canvas Background */}
+          {/* 4. Fixed 3D Canvas Background */}
           <Scene
             scrollProgress={scrollProgress}
             onUpdateDepth={(depth, realmIdx) => {
@@ -69,7 +73,7 @@ export default function App() {
             onOpenRegister={handleOpenRegister}
           />
 
-          {/* 4. Header Navigation */}
+          {/* 5. Header Navigation */}
           <Navigation
             isMuted={isMuted}
             setIsMuted={setIsMuted}
@@ -77,40 +81,40 @@ export default function App() {
             onOpenRegister={() => handleOpenRegister(null)}
           />
 
-          {/* 5. Submerged Depth Indicator Gauge */}
+          {/* 6. Submerged Depth Indicator Gauge */}
           <DepthIndicator
             depthMeters={depthMeters}
             activeRealmIndex={activeRealmIndex}
           />
 
-          {/* 6. Vertical Floating Timeline Rail */}
+          {/* 7. Vertical Floating Timeline Rail */}
           <TimelineRail
             scrollProgress={scrollProgress}
             onScrollToDepthProgress={handleScrollToDepthProgress}
           />
 
-          {/* 7. Clean Scrollable Content Overlays */}
+          {/* 8. Clean Scrollable Content Overlays */}
           <ScrollOverlays
             scrollProgress={scrollProgress}
             onOpenRules={(evt) => setActiveRulesEvent(evt)}
             onOpenRegister={handleOpenRegister}
           />
 
-          {/* 8. Event Rules Overlay Modal */}
+          {/* 9. Event Rules Overlay Modal */}
           <EventRulesModal
             event={activeRulesEvent}
             onClose={() => setActiveRulesEvent(null)}
             onRegister={(evt) => handleOpenRegister(evt)}
           />
 
-          {/* 9. Realm Map Quick Jump Drawer */}
+          {/* 10. Realm Map Quick Jump Drawer */}
           <RealmQuickNav
             isOpen={isQuickNavOpen}
             onClose={() => setIsQuickNavOpen(false)}
             onScrollToDepth={handleScrollToDepthProgress}
           />
 
-          {/* 10. Registration Modal */}
+          {/* 11. Registration Modal */}
           <RegistrationModal
             isOpen={isRegisterOpen}
             onClose={() => setIsRegisterOpen(false)}

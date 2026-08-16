@@ -7,6 +7,8 @@ import SubmergedCanyonWalls from './realms/SubmergedCanyonWalls';
 import SubmarineBase from './realms/SubmarineBase';
 import RealmFinal_Temple from './realms/RealmFinal_Temple';
 import ProceduralMonolith from './realms/ProceduralMonolith';
+import AnimatedDolphin from './realms/AnimatedDolphin';
+import { True3DDolphin } from './realms/True3DFishModels';
 import { OverheadSunGap, SwirlingFishVortex, OverheadHumpbackWhale, DiverSilhouette } from './realms/OceanAtmospherics';
 import { EVENTS_DATA } from '../data/eventsData';
 
@@ -23,6 +25,14 @@ export default function Scene({ scrollProgress, onUpdateDepth, onOpenRegister })
         }}
       >
         <Suspense fallback={null}>
+          {/* INTERACTIVE 3D DOLPHIN COMPANION SWIMMING ALONGSIDE THE CAMERA */}
+          <AnimatedDolphin scrollProgress={scrollProgress} scale={[2.4, 2.4, 2.4]} />
+
+          {/* SCHOOLS OF 3D BOTTLENOSE DOLPHINS IN SUNLIGHT ZONE */}
+          <True3DDolphin position={[-14, -25, -12]} scale={[2.2, 2.2, 2.2]} speed={0.4} />
+          <True3DDolphin position={[12, -75, -10]} scale={[2.0, 2.0, 2.0]} speed={0.35} />
+          <True3DDolphin position={[-8, -140, -14]} scale={[2.4, 2.4, 2.4]} speed={0.45} />
+
           {/* OVERHEAD CAVERN SUNLIGHT GAP & VOLUMETRIC GOD RAYS */}
           <OverheadSunGap />
 
