@@ -6,11 +6,13 @@ import MarineLife from './MarineLife';
 import SubmergedCanyonWalls from './realms/SubmergedCanyonWalls';
 import SubmarineBase from './realms/SubmarineBase';
 import RealmFinal_Temple from './realms/RealmFinal_Temple';
-import AnimatedDolphin from './realms/AnimatedDolphin';
-import { True3DDolphin } from './realms/True3DFishModels';
+import ProceduralMonolith from './realms/ProceduralMonolith';
 import { OverheadSunGap, SwirlingFishVortex, OverheadHumpbackWhale, DiverSilhouette } from './realms/OceanAtmospherics';
+import { EVENTS_DATA } from '../data/eventsData';
 
 export default function Scene({ scrollProgress, onUpdateDepth, onOpenRegister }) {
+  const monolithTypes = ['gate', 'obelisk', 'gate', 'crystal', 'runestone', 'gate', 'obelisk', 'crystal', 'gate', 'runestone'];
+
   return (
     <div className="canvas-container">
       <Canvas
@@ -21,14 +23,6 @@ export default function Scene({ scrollProgress, onUpdateDepth, onOpenRegister })
         }}
       >
         <Suspense fallback={null}>
-          {/* INTERACTIVE GLB DOLPHIN COMPANION (Loaded via useGLTF from /assets/dolphin_anim.glb) */}
-          <AnimatedDolphin scrollProgress={scrollProgress} scale={[0.35, 0.35, 0.35]} />
-
-          {/* SCHOOLS OF COMPACT BOTTLENOSE DOLPHINS IN SUNLIGHT REEF ZONE */}
-          <True3DDolphin position={[-14, -25, -12]} scale={[0.4, 0.4, 0.4]} speed={0.4} />
-          <True3DDolphin position={[12, -75, -10]} scale={[0.35, 0.35, 0.35]} speed={0.35} />
-          <True3DDolphin position={[-8, -140, -14]} scale={[0.45, 0.45, 0.45]} speed={0.45} />
-
           {/* OVERHEAD CAVERN SUNLIGHT GAP & VOLUMETRIC GOD RAYS */}
           <OverheadSunGap />
 
@@ -45,7 +39,6 @@ export default function Scene({ scrollProgress, onUpdateDepth, onOpenRegister })
           <EnvironmentEffects scrollProgress={scrollProgress} />
 
           {/* NATURAL UNDERWATER CANYON ROCK CLIFFS, CAVE ARCHES, SANDY BED & HYDROTHERMAL VENTS */}
-          {/* Zero Artificial Rectangular Poles/Columns */}
           <SubmergedCanyonWalls />
 
           {/* 3D SUBMARINE RESEARCH BASE HABITAT POD */}
@@ -57,8 +50,37 @@ export default function Scene({ scrollProgress, onUpdateDepth, onOpenRegister })
           {/* Smooth Scroll Vertical Descent Camera Trajectory with Interactive Mouse Parallax */}
           <CameraController scrollProgress={scrollProgress} onUpdateDepth={onUpdateDepth} />
 
+          {/* Hero Realm (0m): 3D Ancient Floating Stone Portal Ring Circle */}
+          <group position={[0, -5, -8]}>
+            <ProceduralMonolith type="gate" scale={[1.3, 1.3, 1.3]} runeText="ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ" />
+          </group>
+
+          {/* Introduction Gate (84m): 3D Ancient Stone Obelisk */}
+          <group position={[0, -50, -10]}>
+            <ProceduralMonolith type="obelisk" scale={[1.2, 1.2, 1.2]} runeText="ᛗ ᛋ ᚾ ᛞ ᚱ" />
+          </group>
+
+          {/* 10 Event Realms: 3D Floating Stone Portal Ring Circles & Submerged Kingdom Monuments */}
+          {EVENTS_DATA.map((event, idx) => {
+            const posY = -105 - (idx * 48);
+            const posZ = -15 - (idx * 2);
+            const posX = (idx % 2 === 0 ? 5 : -5);
+            const monolithType = monolithTypes[idx % monolithTypes.length];
+
+            return (
+              <group key={event.id} position={[posX, posY, posZ]}>
+                <ProceduralMonolith
+                  type={monolithType}
+                  scale={[1.2, 1.2, 1.2]}
+                  runeText={event.rune || "ᚱ ᛗ ᛋ ᚾ ᛞ"}
+                />
+              </group>
+            );
+          })}
+
           {/* Final Registration Sanctuary & Scannable QR Pedestal (1000m) */}
           <group position={[0, -600, -20]}>
+            <ProceduralMonolith type="gate" scale={[1.5, 1.5, 1.5]} runeText="A Q U A S A G A" />
             <RealmFinal_Temple position={[0, 0, 0]} onOpenRegister={onOpenRegister} />
           </group>
         </Suspense>
