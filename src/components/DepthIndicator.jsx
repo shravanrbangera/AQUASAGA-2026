@@ -26,9 +26,9 @@ export default function DepthIndicator({ depth = 0 }) {
   const depthPercent = Math.min(100, Math.round((depth / 1000) * 100));
 
   return (
-    <div className="fixed bottom-6 left-6 z-40 pointer-events-auto">
+    <div className="fixed bottom-6 left-6 z-30 pointer-events-auto">
       {/* Futuristic Sci-Fi HUD Telemetry Card */}
-      <div className="glass-panel p-4 border border-[rgba(0,240,255,0.4)] rounded-2xl bg-[rgba(2,16,26,0.85)] backdrop-blur-xl shadow-[0_0_25px_rgba(0,240,255,0.3)] space-y-2.5 min-w-[240px]">
+      <div className="glass-panel p-4 border border-[rgba(0,240,255,0.4)] rounded-2xl bg-[rgba(2,16,26,0.9)] backdrop-blur-xl shadow-[0_0_25px_rgba(0,240,255,0.3)] space-y-2.5 min-w-[240px]">
         {/* Top Header with Sonar Radar Ping */}
         <div className="flex items-center justify-between border-b border-[rgba(0,240,255,0.2)] pb-2">
           <div className="flex items-center gap-2">

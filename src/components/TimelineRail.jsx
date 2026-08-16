@@ -14,7 +14,7 @@ export default function TimelineRail({ scrollProgress, onScrollToDepthProgress }
   ];
 
   return (
-    <div className="fixed right-6 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-center gap-3 pointer-events-auto">
+    <div className="fixed right-6 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col items-center gap-3 pointer-events-auto">
       {/* Background Vertical Glow Line */}
       <div className="relative w-0.5 h-72 bg-[rgba(0,240,255,0.2)] rounded-full overflow-hidden">
         <div
@@ -46,9 +46,9 @@ export default function TimelineRail({ scrollProgress, onScrollToDepthProgress }
                 }`}
               />
 
-              {/* Hover Tooltip */}
+              {/* Hover Tooltip - Positioned cleanly to the LEFT of the right-hand timeline rail */}
               <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                <div className="glass-panel px-2.5 py-1 font-mono text-[10px] text-[#00f0ff] border border-[rgba(0,240,255,0.4)] shadow-[0_0_10px_rgba(0,240,255,0.3)]">
+                <div className="glass-panel px-2.5 py-1 font-mono text-[10px] text-[#00f0ff] border border-[rgba(0,240,255,0.4)] shadow-[0_0_100px_rgba(0,240,255,0.3)]">
                   {node.title}
                 </div>
               </div>
