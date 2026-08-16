@@ -1,7 +1,7 @@
 import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { True3DShark, True3DAnglerfish, True3DSwordfish, True3DTurtle, True3DJellyfish, True3DWhale } from './realms/True3DFishModels';
+import { True3DShark, True3DAnglerfish, True3DSwordfish, True3DTurtle, True3DJellyfish, True3DWhale, True3DSeahorse } from './realms/True3DFishModels';
 import { MantaRay, HammerheadShark, ElectricEel, ColossalSquid, GiantOctopus } from './realms/OceanSpecies';
 
 export default function MarineLife({ scrollProgress = 0 }) {
@@ -71,7 +71,7 @@ export default function MarineLife({ scrollProgress = 0 }) {
         />
       </instancedMesh>
 
-      {/* DEPTH ZONE 1 (0m - 180m): HUMPBACK WHALES, SWORDFISH, SEA TURTLES & MANTA RAYS */}
+      {/* DEPTH ZONE 1 (0m - 180m): HUMPBACK WHALES, SWORDFISH, SEA TURTLES, MANTA RAYS & SEAHORSES */}
       <True3DWhale position={[0, -60, -10]} scale={[2.2, 2.2, 2.2]} />
 
       <True3DSwordfish position={[-12, -40, -12]} scale={[1.8, 1.8, 1.8]} speed={0.4} />
@@ -81,6 +81,11 @@ export default function MarineLife({ scrollProgress = 0 }) {
       <True3DTurtle position={[-10, -50, -12]} scale={[1.5, 1.5, 1.5]} speed={0.25} />
       <True3DTurtle position={[12, -120, -14]} scale={[1.4, 1.4, 1.4]} speed={0.3} />
       <True3DTurtle position={[-6, -170, -10]} scale={[1.6, 1.6, 1.6]} speed={0.2} />
+
+      {/* 3D Bioluminescent Seahorses Drifting near Vegetation */}
+      <True3DSeahorse position={[-12, -70, -10]} scale={[1.2, 1.2, 1.2]} speed={0.2} />
+      <True3DSeahorse position={[10, -160, -12]} scale={[1.3, 1.3, 1.3]} speed={0.25} />
+      <True3DSeahorse position={[-6, -230, -14]} scale={[1.1, 1.1, 1.1]} speed={0.18} />
 
       <MantaRay position={[10, -30, -15]} scale={[1.4, 1.4, 1.4]} speed={0.35} />
       <MantaRay position={[-14, -90, -12]} scale={[1.5, 1.5, 1.5]} speed={0.3} />
